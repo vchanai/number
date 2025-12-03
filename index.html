@@ -1,8 +1,10 @@
-<!DOCTYPE html><html lang="en"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cosmic Numerology</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&amp;family=Montserrat:wght@300;400&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
     <style>
         :root {
             /* Dark starry background */
@@ -18,17 +20,29 @@
             box-sizing: border-box;
         }
 
+        /* Apply background to HTML to prevent white edges on mobile */
+        html {
+            background-color: #000000; /* Fallback black */
+            background: var(--bg-gradient);
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Montserrat', sans-serif;
-            background: var(--bg-gradient);
             color: white;
             display: flex;
             justify-content: center;
             align-items: center;
+            /* Use dvh (dynamic viewport height) for mobile browsers */
             min-height: 100vh;
+            min-height: 100dvh; 
             margin: 0;
             overflow: hidden;
             position: relative;
+            /* Ensure body is transparent so HTML background shows */
+            background: transparent; 
         }
 
         /* --- Generated Stars CSS --- */
@@ -62,29 +76,26 @@
         .container {
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px); /* Safari support */
             padding: 2rem;
             
             /* CIRCLE SHAPE */
             border-radius: 50%;
-            aspect-ratio: 1 / 1; /* Keeps it a perfect circle */
+            aspect-ratio: 1 / 1; 
             
-            /* Flex centering to keep content in the middle of the circle */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             
-            /* White Shining Frame */
             border: 2px solid rgba(255, 255, 255, 0.8); 
             
-            /* Glow on the frame */
             box-shadow: 
                 0 0 40px rgba(255, 255, 255, 0.3), 
                 inset 0 0 50px rgba(255, 255, 255, 0.2);
             
-            width: 90vw; /* Responsive width */
-            max-width: 500px; /* Max size */
+            width: 90vw; 
+            max-width: 500px; 
             max-height: 500px;
             
             text-align: center;
@@ -107,7 +118,7 @@
             margin: 0 0 1.5rem 0; 
             text-shadow: var(--theme-glow);
             text-transform: uppercase;
-            /* Removed border-bottom and padding-bottom here */
+            border-bottom: none; /* Explicitly removed */
         }
 
         input[type="text"] {
@@ -118,11 +129,12 @@
             font-family: 'Cinzel', serif;
             font-size: 1.3rem;
             text-align: center;
-            width: 60%; /* Narrower input to fit circle curve */
+            width: 55%; /* Slightly narrower for mobile look */
             padding: 8px;
             margin-bottom: 1.5rem;
             transition: all 0.4s ease;
             letter-spacing: 2px;
+            border-radius: 0; /* Fix for iOS rounded corners on inputs */
         }
 
         input[type="text"]::placeholder {
@@ -151,15 +163,16 @@
             transition: all 0.3s ease;
             border-radius: 30px;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            -webkit-tap-highlight-color: transparent; /* Removes highlight on tap */
         }
 
-        button:hover {
+        button:hover, button:active {
             background: var(--theme-white);
             color: #000;
             box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
         }
 
-        /* Result Area - Absolute positioning helps keep layout stable in a circle */
+        /* Result Area */
         #result-area {
             margin-top: 1rem;
             opacity: 0;
@@ -174,12 +187,12 @@
         #result-area.show {
             opacity: 1;
             height: auto;
-            min-height: 120px; /* Reserve space */
+            min-height: 120px; 
         }
 
         .final-number {
             font-family: 'Cinzel', serif;
-            font-size: 5rem; /* Slightly smaller to fit circle */
+            font-size: 5rem; 
             color: #fff;
             text-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 60px rgba(255, 255, 255, 0.5);
             margin: 0;
@@ -196,20 +209,21 @@
             text-shadow: 0 0 5px rgba(0,0,0,0.5);
         }
 
-        /* Mobile Responsiveness */
+        /* Mobile Responsiveness Adjustments */
         @media (max-width: 480px) {
             .container {
-                width: 90vw;
-                height: 90vw; /* Force circle on mobile */
+                width: 85vw; /* Slightly smaller to ensure it fits */
+                height: 85vw; 
+                max-height: 85vw;
                 padding: 1rem;
             }
-            h1 { font-size: 1rem; margin-bottom: 1rem; }
-            input[type="text"] { font-size: 1rem; width: 70%; }
-            .final-number { font-size: 3.5rem; }
+            h1 { font-size: 1.2rem; margin-bottom: 1rem; }
+            input[type="text"] { font-size: 1.1rem; width: 65%; }
+            .final-number { font-size: 4rem; }
             .breakdown { font-size: 0.7rem; }
         }
     </style>
-<script src="https://puc.poecdn.net/authenticated_preview_page/syncedState.3f7572448765332f3047.js"></script></head>
+</head>
 <body>
 
 <!-- Container for JS Generated Stars -->
@@ -319,6 +333,5 @@
     });
 </script>
 
-
-
-</body></html>
+</body>
+</html>
